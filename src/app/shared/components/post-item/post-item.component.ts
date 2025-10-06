@@ -1,9 +1,11 @@
 import {Component, input, output, signal} from '@angular/core';
 import {PostCommentModel, PostModel} from '../../models';
+import {CommonModule} from '@angular/common';
 
 @Component({
   selector: 'app-post',
   standalone: true,
+  imports: [CommonModule],
   templateUrl: './post-item.component.html',
 })
 export class PostItemComponent {
@@ -27,7 +29,6 @@ export class PostItemComponent {
   readonly post = input.required<PostModel>();
   readonly isFavorite = input(false);
 
-  readonly toggleFavorite = output<string | number>();
   readonly open = output<string | number>();
 
   readonly expanded = signal(false);
@@ -35,11 +36,6 @@ export class PostItemComponent {
 
   public onToggleFavorite(event: MouseEvent): void {
     event.stopPropagation();
-    this.toggleFavorite.emit(this.post().id);
-  }
-
-  public onOpenPost(): void {
-    this.open.emit(this.post().id);
   }
 
   public toggleExpand(e: MouseEvent) {
@@ -52,6 +48,10 @@ export class PostItemComponent {
   }
 
   public loadComments(): void {
-  this.comments.set(this.mockComments);
+    this.comments.set(this.mockComments);
+  }
+
+  public toggleFavorite(): void {
+    console.log('favorite')
   }
 }

@@ -1,7 +1,6 @@
 <div
   class="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-5 cursor-pointer flex flex-col gap-4"
 >
-  <!-- 📄 Główna część posta -->
   <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
     <div class="flex-1" (click)="toggleExpand($event)">
       <h3 class="text-lg font-semibold text-gray-800 mb-1">
@@ -13,42 +12,27 @@
     </div>
 
     <div class="flex items-center gap-3">
-      <!-- ❤️ Serce ulubionych -->
       <button
-        class="flex items-center justify-center cursor-pointer text-gray-400 hover:text-red-500 transition-transform duration-200 hover:scale-110"
-        (click)="onToggleFavorite($event)"
-        [attr.aria-label]="isFavorite() ? 'Usuń z ulubionych' : 'Dodaj do ulubionych'"
+        class="flex items-center justify-center cursor-pointer transition-transform duration-200 hover:scale-110"
+        [ngClass]="isFavorite() ? 'text-red-500' : 'text-gray-400 hover:text-red-500'"
+        (click)="toggleFavorite()"
       >
-        @if (!isFavorite()) {
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-7 w-7"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="1.8"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M12 21s-7-4.35-9-6.5A5.5 5.5 0 0112 3a5.5 5.5 0 019 11.5C19 16.65 12 21 12 21z"
-            />
-          </svg>
-        } @else {
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-7 w-7 text-red-500"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-          >
-            <path
-              d="M12 21s-7-4.35-9-6.5A5.5 5.5 0 0112 3a5.5 5.5 0 019 11.5C19 16.65 12 21 12 21z"
-            />
-          </svg>
-        }
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-7 w-7"
+          [attr.fill]="isFavorite() ? 'red' : 'none'"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="1.8"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M12 21s-7-4.35-9-6.5A5.5 5.5 0 0112 3a5.5 5.5 0 019 11.5C19 16.65 12 21 12 21z"
+          />
+        </svg>
       </button>
 
-      <!-- ⬇️ Strzałka rozwijania -->
       <button
         class="flex items-center justify-center text-gray-400 hover:text-gray-600 transition-transform duration-200"
         (click)="toggleExpand($event)"
@@ -69,7 +53,6 @@
     </div>
   </div>
 
-  <!-- 💬 Komentarze pod całą kartą -->
   @if (expanded()) {
     <div class="mt-4 border-t border-gray-200 pt-4 space-y-3">
       @for (comment of comments(); track $index) {
