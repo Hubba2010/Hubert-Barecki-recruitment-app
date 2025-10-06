@@ -4,45 +4,8 @@ Lista postów z filtrami i dodawaniem do ulubionych
 
 ## 📁 Struktura katalogów
 
-src/app
-│
-├── core/
-│ ├── api/
-│ │ ├── posts-api.service.ts
-│ │ ├── users-api.service.ts
-│ │ └── index.ts
-│ │
-│ ├── data-access/
-│ │ ├── posts.store.ts
-│ │ ├── users.store.ts
-│ │ └── index.ts
-│
-├── feature/
-│ ├── post-list/
-│ │ ├── post-list.component.ts
-│ │ ├── post-list.component.html
-│ │ └── index.ts
-│
-├── shared/
-│ ├── components/
-│ │ ├── post-item/
-│ │ │ ├── post-item.component.ts
-│ │ │ ├── post-item.component.html
-│ │ │ └── index.ts
-│ │ └── search-bar/
-│ │ ├── search-bar.component.ts
-│ │ ├── search-bar.component.html
-│ │ └── index.ts
-│ │
-│ ├── models/
-│ │ ├── post.model.ts
-│ │ ├── user.model.ts
-│ │ └── index.ts
-│
-├── layout/
-│ └── ...
-│
-└── main.ts / app.config.ts
+<img width="298" height="396" alt="image" src="https://github.com/user-attachments/assets/de49aba8-3113-471d-9f54-1bb81f89ad54" />
+
 
 
 ---
