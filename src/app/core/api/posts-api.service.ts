@@ -17,7 +17,7 @@ export class PostsApiService {
     return this.http.get<PostModel[]>(`${this.API}/posts`, { params });
   }
 
-  public getCommentsByPostId(postId: number): Observable<PostCommentModel[]> {
+  public getCommentsByPostId(postId: string | number): Observable<PostCommentModel[]> {
     return this.http.get<PostCommentModel[]>(`${this.API}/posts/${postId}/comments`);
   }
 }

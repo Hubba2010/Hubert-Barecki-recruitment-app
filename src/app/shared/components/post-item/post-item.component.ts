@@ -1,6 +1,9 @@
-import {Component, input, output, signal} from '@angular/core';
+import {Component, computed, DestroyRef, inject, input, output, signal} from '@angular/core';
 import {PostCommentModel, PostModel} from '../../models';
 import {CommonModule} from '@angular/common';
+import {PostsApiService} from '../../../core/api';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {PostsStore} from '../../../core/data-access';
 
 @Component({
   selector: 'app-post',
@@ -9,34 +12,17 @@ import {CommonModule} from '@angular/common';
   templateUrl: './post-item.component.html',
 })
 export class PostItemComponent {
-  readonly mockComments: PostCommentModel[] = [
-    {
-      "postId": 1,
-      "id": 1,
-      "name": "id labore ex et quam laborum",
-      "email": "Eliseo@gardner.biz",
-      "body": "laudantium enim quasi est quidem magnam voluptate ipsam eos\ntempora quo necessitatibus\ndolor quam autem quasi\nreiciendis et nam sapiente accusantium"
-    },
-    {
-      "postId": 1,
-      "id": 2,
-      "name": "quo vero reiciendis velit similique earum",
-      "email": "Jayne_Kuhic@sydney.com",
-      "body": "est natus enim nihil est dolore omnis voluptatem numquam\net omnis occaecati quod ullam at\nvoluptatem error expedita pariatur\nnihil sint nostrum voluptatem reiciendis et"
-    },
-  ];
+  private readonly _postsApiService = inject(PostsApiService);
+  private readonly _postsStore = inject(PostsStore);
+  private readonly _destroyRef = inject(DestroyRef);
 
   readonly post = input.required<PostModel>();
-  readonly isFavorite = input(false);
-
   readonly open = output<string | number>();
 
   readonly expanded = signal(false);
   readonly comments = signal<PostCommentModel[] | null>(null);
-
-  public onToggleFavorite(event: MouseEvent): void {
-    event.stopPropagation();
-  }
+  readonly postId = computed(() => this.post().id.toString());
+  readonly isFavorite = computed(() => this._postsStore.isFavorite(this.postId()));
 
   public toggleExpand(e: MouseEvent) {
     e.stopPropagation();
@@ -48,10 +34,14 @@ export class PostItemComponent {
   }
 
   public loadComments(): void {
-    this.comments.set(this.mockComments);
+    this._postsApiService.getCommentsByPostId(this.postId()).pipe(
+      takeUntilDestroyed(this._destroyRef)
+    ).subscribe((postComments) => {
+      this.comments.set(postComments)
+    })
   }
 
   public toggleFavorite(): void {
-    console.log('favorite')
+    this._postsStore.toggleFavorite(this.postId());
   }
 }
