@@ -45,7 +45,7 @@ export class PostListComponent {
     const { searchPhrase, user, onlyFavorites } = this.filtersFormValue() as FiltersFormModel;
 
     if (onlyFavorites) {
-      list = list.filter(p => this._postsStore.isFavorite(p.id));
+      list = list.filter(post => this._postsStore.isFavorite(post.id.toString()));
     }
 
     if (user) {

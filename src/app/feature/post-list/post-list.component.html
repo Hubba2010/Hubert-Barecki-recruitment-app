@@ -1,4 +1,4 @@
-<div class="w-full flex flex-col items-center gap-6">
+<div class="w-full flex flex-col items-center gap-6 px-4">
   <div [formGroup]="filtersForm" class="w-full max-w-[1000px] flex flex-col items-center sm:flex-row gap-4">
     <mat-form-field>
       <mat-label>Filtruj po treści</mat-label>
@@ -21,11 +21,15 @@
   </div>
 
   <div class="flex flex-col items-center gap-12 w-full">
-    @for (post of filteredPosts(); track post.id) {
-      <app-post
-        class="w-full max-w-[1000px]"
-        [post]="post"
-      ></app-post>
+    @if (filteredPosts().length === 0) {
+      <p class="text-gray-500 text-lg mt-4">Brak postów pasujących do filtrów.</p>
+    } @else {
+      @for (post of filteredPosts(); track post.id) {
+        <app-post
+          class="w-full max-w-[1000px]"
+          [post]="post"
+        ></app-post>
+      }
     }
   </div>
 </div>

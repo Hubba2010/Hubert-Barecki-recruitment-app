@@ -4,11 +4,12 @@ import {CommonModule} from '@angular/common';
 import {PostsApiService} from '../../../core/api';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {PostsStore} from '../../../core/data-access';
+import {MatTooltip} from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-post',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatTooltip],
   templateUrl: './post-item.component.html',
 })
 export class PostItemComponent {
