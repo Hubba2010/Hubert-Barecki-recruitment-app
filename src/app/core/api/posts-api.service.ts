@@ -1,22 +1,23 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {PostCommentModel, PostModel} from '../../shared/models';
 
 @Injectable({ providedIn: 'root' })
 export class PostsApiService {
-  private readonly apiUrl = 'https://jsonplaceholder.typicode.com';
+  private readonly API = 'https://jsonplaceholder.typicode.com';
 
   constructor(private http: HttpClient) {}
 
-  public getPosts(userId?: number): Observable<PostModel[]> {
-    const url = userId
-      ? `${this.apiUrl}/posts?userId=${userId}`
-      : `${this.apiUrl}/posts`;
-    return this.http.get<PostModel[]>(url);
+  public getPosts(userId?: string | number): Observable<PostModel[]> {
+    let params = new HttpParams();
+    if (userId) {
+      params = params.set('userId', userId.toString());
+    }
+    return this.http.get<PostModel[]>(`${this.API}/posts`, { params });
   }
 
   public getCommentsByPostId(postId: number): Observable<PostCommentModel[]> {
-    return this.http.get<PostCommentModel[]>(`${this.apiUrl}/posts/${postId}/comments`);
+    return this.http.get<PostCommentModel[]>(`${this.API}/posts/${postId}/comments`);
   }
 }

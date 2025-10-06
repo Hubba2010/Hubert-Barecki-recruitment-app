@@ -5,13 +5,13 @@ import { tap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class UsersStore {
-  private _usersService = inject(UsersApiService);
+  private _usersApiService = inject(UsersApiService);
   private _users = signal<UserModel[]>([]);
 
   public readonly usersList = computed(() => this._users());
 
   public getAllUsers(): void {
-    this._usersService.getUsers().pipe(tap(data => {
+    this._usersApiService.getUsers().pipe(tap(data => {
       this._users.set(data || []);
     })).subscribe();
   }

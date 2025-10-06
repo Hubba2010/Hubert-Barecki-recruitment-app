@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, inject, OnInit} from '@angular/core'
 import {RouterOutlet} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {HeaderComponent} from './layout/header';
-import {UsersStore} from './core/data-access';
+import {PostsStore, UsersStore} from './core/data-access';
 
 @Component({
   selector: 'app-root',
@@ -11,10 +11,12 @@ import {UsersStore} from './core/data-access';
   templateUrl: './app.component.html'
 })
 export class AppComponent implements OnInit {
+  private _postsStore = inject(PostsStore);
   private _usersStore = inject(UsersStore);
 
 
   public ngOnInit(): void {
     this._usersStore.getAllUsers();
+    this._postsStore.fetchPosts();
   }
 }

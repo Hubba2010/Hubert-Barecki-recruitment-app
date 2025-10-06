@@ -1,9 +1,31 @@
-<div class="flex flex-col items-center gap-12">
-  @for (post of mockPosts(); track $index) {
-    <app-post
-      class="w-full max-w-[1000px]"
-      [post]="post"
-    ></app-post>
-  }
-</div>
+<div class="w-full flex flex-col items-center gap-6">
+  <div [formGroup]="filtersForm" class="w-full max-w-[1000px] flex flex-col items-center sm:flex-row gap-4">
+    <mat-form-field>
+      <mat-label>Filtruj po treści</mat-label>
+      <input matInput formControlName="searchPhrase" placeholder="Wpisz tekst...">
+    </mat-form-field>
 
+    <mat-form-field>
+      <mat-label>Filtruj po użytkowniku</mat-label>
+      <mat-select formControlName="user">
+        <mat-option value="">Wszyscy</mat-option>
+        @for (user of users(); track user.id) {
+          <mat-option [value]="user.id">
+            {{ user.name }}
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-checkbox class="items-center" formControlName="onlyFavorites">Tylko ulubione</mat-checkbox>
+  </div>
+
+  <div class="flex flex-col items-center gap-12 w-full">
+    @for (post of filteredPosts(); track post.id) {
+      <app-post
+        class="w-full max-w-[1000px]"
+        [post]="post"
+      ></app-post>
+    }
+  </div>
+</div>
