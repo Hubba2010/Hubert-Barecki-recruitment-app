@@ -6,4 +6,25 @@
     Aplikacja rekrutacyjna Hubert Barecki
   </p>
   <hr class="w-24 border-t border-gray-300 mt-4">
+  <div class="flex gap-4 mt-4">
+    <a
+      mat-flat-button
+      color="primary"
+      routerLink="/posts"
+      routerLinkActive="mat-raised-button mat-primary"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      POSTY
+    </a>
+
+    <a
+      mat-flat-button
+      color="primary"
+      routerLink="/gantt"
+      routerLinkActive="mat-raised-button mat-primary"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      GANTT
+    </a>
+  </div>
 </header>

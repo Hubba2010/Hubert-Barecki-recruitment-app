@@ -1,15 +1,15 @@
-import {computed, inject, Injectable, signal} from '@angular/core';
-import {PostCommentModel, PostModel} from '../../shared/models';
-import {PostsApiService} from '../api';
-import {tap} from 'rxjs/operators';
-import {Observable} from 'rxjs';
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { PostCommentModel, PostModel } from '../../shared/models';
+import { PostsApiService } from '../api';
+import { map, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
-export class PostsStore{
-  private _postsApiService = inject(PostsApiService);
+export class PostsStore {
+  private readonly _postsApiService = inject(PostsApiService);
 
-  private _postsData = signal<PostModel[]>([]);
-  private _favorites = signal<Set<string | number>>(new Set());
+  private readonly _postsData = signal<PostModel[]>([]);
+  private readonly _favorites = signal<Set<string | number>>(new Set());
 
   readonly postsList = computed(() => this._postsData());
   readonly postsLoading = signal(false);
@@ -17,17 +17,25 @@ export class PostsStore{
 
   public fetchPosts(userId?: string | number): void {
     this.postsLoading.set(true);
-    this._postsApiService.getPosts(userId)
+
+    this._postsApiService
+      .getPosts(userId)
       .pipe(
-        tap(data => {
-          this._postsData.set(data || []);
+        map((data) =>
+          (data || []).map((post) => ({
+            ...post,
+            ...this.generateMockDates(),
+          }))
+        ),
+        tap((postsWithDates) => {
+          this._postsData.set(postsWithDates);
           this.postsLoading.set(false);
         })
       )
       .subscribe();
   }
 
-  public toggleFavorite(postId: string | number) {
+  public toggleFavorite(postId: string | number): void {
     const fav = new Set(this._favorites());
     if (fav.has(postId)) fav.delete(postId);
     else fav.add(postId);
@@ -39,11 +47,29 @@ export class PostsStore{
   }
 
   public getCommentsByPostId(postId: string | number): Observable<PostCommentModel[]> {
-    this.commentsLoading.set(true)
+    this.commentsLoading.set(true);
     return this._postsApiService.getCommentsByPostId(postId).pipe(
-      tap(data => {
+      tap(() => {
         this.commentsLoading.set(false);
       })
     );
+  }
+
+  // Genruje losowe daty start/end do zamockowania Gantta
+  private generateMockDates(): { startDate: string; endDate: string } {
+    const now = new Date();
+    const startOffsetDays = Math.floor(Math.random() * 30);
+    const durationDays = Math.floor(Math.random() * 5) + 1;
+
+    const startDate = new Date(now);
+    startDate.setDate(now.getDate() - startOffsetDays);
+
+    const endDate = new Date(startDate);
+    endDate.setDate(startDate.getDate() + durationDays);
+
+    return {
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString(),
+    };
   }
 }

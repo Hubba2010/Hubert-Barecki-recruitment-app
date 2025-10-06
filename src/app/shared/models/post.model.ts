@@ -3,6 +3,8 @@ export interface PostModel {
   id: string | number,
   title: string,
   body: string
+  startDate?: string,
+  endDate?: string,
 }
 
 export interface PostCommentModel {
