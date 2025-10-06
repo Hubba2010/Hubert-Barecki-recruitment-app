@@ -1,99 +1,161 @@
-# Zadanie Rekrutacyjne – Etap 1
+# Aplikacja rekrutacyjna - Posts App
 
-### Nie oczekujemy gotowego produktu - zrób tyle ile będziesz w stanie zrobić. Otrzymanie zadania oznacza start zadania i od niego liczone jest do 8h. (Zadanie w najprostszym wariancie powinno zająć około 3-4 godziny)
+Lista postów z filtrami i dodawaniem do ulubionych
 
-### Dla jasności - żaden fragment zadania nie zostanie wykorzystany komercyjnie, jest to zadanie czysto rekrutacyjne.
+## 📁 Struktura katalogów
 
-## Cel
+src/app
+│
+├── core/
+│ ├── api/
+│ │ ├── posts-api.service.ts
+│ │ ├── users-api.service.ts
+│ │ └── index.ts
+│ │
+│ ├── data-access/
+│ │ ├── posts.store.ts
+│ │ ├── users.store.ts
+│ │ └── index.ts
+│
+├── feature/
+│ ├── post-list/
+│ │ ├── post-list.component.ts
+│ │ ├── post-list.component.html
+│ │ └── index.ts
+│
+├── shared/
+│ ├── components/
+│ │ ├── post-item/
+│ │ │ ├── post-item.component.ts
+│ │ │ ├── post-item.component.html
+│ │ │ └── index.ts
+│ │ └── search-bar/
+│ │ ├── search-bar.component.ts
+│ │ ├── search-bar.component.html
+│ │ └── index.ts
+│ │
+│ ├── models/
+│ │ ├── post.model.ts
+│ │ ├── user.model.ts
+│ │ └── index.ts
+│
+├── layout/
+│ └── ...
+│
+└── main.ts / app.config.ts
 
-Twoim zadaniem jest przygotowanie mini-aplikacji w Angular 20 z wykorzystaniem nowoczesnych funkcjonalności frameworka.
-
-Aplikacja powinna korzystać z publicznego API [jsonplaceholder.typicode.com](https://jsonplaceholder.typicode.com), prezentować listę postów wraz z możliwością ich filtrowania, przeglądania szczegółów oraz dodawania do ulubionych.  
-Projekt ma być responsywny i działać zarówno na desktopie, jak i na urządzeniach mobilnych.
-
----
-
-## Zasady realizacji
-- Zadanie należy umieścić w publicznym repozytorium GitHub, aby był wgląd w historię commitów.  
-- **Nazwa repozytorium:** imię i nazwisko kandydata.  
-- **Czas na wykonanie:** do 8 godzin.  
-- **Commity:** częste i opisowe.  
-- Kod powinien być zgodny z dobrymi praktykami (DRY, SOLID, czystość architektury).
-- Użycie AI dopuszczalne jako wsparcie w zakresie planowania, testów i dokumentacji. 
-
----
-
-## Wymagania techniczne
-
-- **Framework:** Angular 20  
-- **Komponenty:** standalone components  
-- **Stan:** signals  
-- **Change detection:** zoneless (`provideZonelessChangeDetection()`)  
-- **Style:** TailwindCSS v4 (theme, zmienne, flexbox)  
-- **Architektura:** lazy loading modułów/feature’ów  
-- **Stan aplikacji:** signals + prosty singleton service trzymający dane w pamięci (cache)  
-- **Animacje:** co najmniej jedna w nowej składni `animate.enter` / `animate.leave`  
-- **Asynchroniczność:** RxJS + HttpClient  
-- **Loader:** prosty spinner lub skeleton  
-- **Responsywność:** poprawne wyświetlanie na desktopie i mobile  
-- **Struktura katalogów:** przejrzysta i uporządkowana (np. `features/`, `shared/`, `core/`, `services/`)  
-
----
-
-## Plan przed implementacją
-Przed rozpoczęciem pracy należy przygotować w pliku `.md` (oczekujemy użycia AI do planowania i dokumentacji):
-- strukturę katalogów,  
-- listę komponentów,  
-- serwisy,  
-- podejście do zarządzania stanem.
 
 ---
 
-## Funkcjonalności
+## 🧩 Komponenty
 
-### 1. Lista postów
-- Pobranie listy z API:  
-  `https://jsonplaceholder.typicode.com/posts`  
-- Wyświetlenie listy tytułów i fragmentów treści.  
-
-### 2. Szczegóły posta
-Po kliknięciu w post załaduj i wyświetl:  
-- pełną treść posta,  
-- dane autora (`/users/:id`),  
-- komentarze (`/posts/:id/comments`).  
-
-### 3. Filtrowanie
-- **Po treści posta** – filtracja po stronie frontendu.  
-- **Po użytkowniku** – filtrowanie przez query param:  
-  `https://jsonplaceholder.typicode.com/posts?userId=1`  
-- **Tylko ulubione** – filtrowanie postów oznaczonych jako ulubione (stan w singletonie).  
-
-### 4. Ulubione
-- Możliwość oznaczania posta jako ulubiony (toggle).  
-- Lista ulubionych przechowywana w singletonie (stan w serwisie).  
-
-### 5. Singleton (cache)
-Dane postów muszą być przechowywane w singleton service (signal store).  
-Dzięki temu posty nie są pobierane ponownie przy każdym wejściu.  
-
-Ponowne zapytania do API wykonujemy tylko w przypadku:  
-- zmiany filtrów,  
-- odświeżenia strony.  
+| Komponent | Lokalizacja | Opis |
+|------------|-------------|------|
+| **PostListComponent** | `feature/post-list` | Główny widok listy postów z filtrami (formularz + lista). |
+| **PostItemComponent** | `shared/components/post-item` | Pojedynczy post z możliwością rozwinięcia komentarzy i oznaczenia jako ulubiony. |
+| **SearchBarComponent (opcjonalny)** | `shared/components/search-bar` | Potencjalny komponent do wyszukiwania globalnego lub filtracji. |
 
 ---
 
-## Bonus (dodatkowe punkty)
-- Dodaj zakładkę z widokiem Gantta, w którym pokażesz posty z zamockowanymi datami start–end (API ich nie zwraca).  
-- Dane mogą być zapisane w modelach TypeScript.  
-- Wyświetlenie w formie prostego timeline (tablica Gantt).  
+## 🧰 Serwisy (API)
+
+| Serwis | Lokalizacja | Odpowiedzialność |
+|---------|-------------|------------------|
+| **PostsApiService** | `core/api/posts-api.service.ts` | Obsługuje komunikację z endpointami `https://jsonplaceholder.typicode.com/posts` i komentarzami (`/comments`). |
+| **UsersApiService** | `core/api/users-api.service.ts` | Pobiera listę użytkowników z `https://jsonplaceholder.typicode.com/users`. |
 
 ---
 
-## Podsumowanie
-Aplikacja powinna:  
-- pobierać i wyświetlać posty,  
-- umożliwiać filtrowanie,  
-- prezentować szczegóły posta,  
-- obsługiwać ulubione,  
-- być responsywna i nowoczesna,  
-- korzystać z najnowszych funkcjonalności Angulara 20.  
+## 🧮 Zarządzanie stanem
+
+### Stores:
+
+#### `UsersStore`
+- Przechowuje listę użytkowników.
+- Metoda `loadUsers()` – pobiera dane z API tylko raz.
+- Udostępnia sygnał `usersList`.
+
+#### `PostsStore`
+- Zarządza postami oraz stanem ulubionych.
+- Metoda `fetchPosts(userId?: number)` – pobiera posty z API (z query param).
+- Metoda `toggleFavorite(postId)` – dodaje/usuwa post z ulubionych.
+- Sygnały:
+  - `postsList`
+  - `favorites`
+  - `loading` (dla spinnera)
+- Zawiera logikę do pobierania komentarzy (`getCommentsByPostId()`).
+
+---
+
+## 🧱 Podejście do zarządzania stanem
+
+- Każdy store jest **singletonem (`providedIn: 'root'`)**.
+- Używane są **Angular Signals** oraz **RxJS operators** (`tap`, `switchMap`, `takeUntilDestroyed`).
+- Formularze filtrów (`FormGroup`) emitują zmiany – po zmianie użytkownika wykonywany jest **nowy request do API**.
+- Filtrowanie po treści i ulubionych odbywa się **po stronie frontendu**.
+
+---
+
+## 🎨 UI i UX
+
+- Framework: **Angular Material**
+- Użyte komponenty:
+  - `MatFormField`
+  - `MatInput`
+  - `MatSelect`
+  - `MatCheckbox`
+  - `MatTooltip`
+  - `MatProgressSpinner`
+- Layout i stylizacja: **Tailwind CSS**
+- Responsywność: `flex`, `sm:flex-row`, `gap`, `max-w-[1000px]`
+
+---
+
+## 🌀 Logika filtracji
+
+| Filtr | Miejsce działania | Mechanizm |
+|--------|--------------------|------------|
+| **Treść posta** | Frontend | Filtracja lokalna po `title` i `body`. |
+| **Użytkownik** | Backend | Request `GET /posts?userId=...`. |
+| **Tylko ulubione** | Frontend | Filtracja po stanie w `PostsStore`. |
+
+---
+
+## 🔄 Flow działania
+
+1. **UsersStore** ładuje użytkowników przy starcie.
+2. **PostListComponent**:
+  - Buduje `filtersForm`.
+  - Subskrybuje zmiany formy (`toSignal`).
+  - Wysyła request przez `PostsStore` po zmianie użytkownika.
+3. **PostsStore**:
+  - Pobiera dane z API.
+  - Ustawia stan (`postsList`, `loading`).
+4. **PostItemComponent**:
+  - Wyświetla post.
+  - Na kliknięcie serca — `toggleFavorite()`.
+  - Na kliknięcie strzałki — rozwija komentarze (`getCommentsByPostId()`).
+
+---
+
+## 🧩 Dodatkowe elementy
+
+- **Spinner ładowania** (Material Progress Spinner) przy `loading == true`.
+- **Komunikat „Brak wyników”** gdy `filteredPosts().length === 0`.
+- **Tooltips** przy przyciskach ulubionych i rozwijania komentarzy.
+
+---
+
+## ✅ Podsumowanie
+
+Projekt wykorzystuje:
+- **Angular 20**
+- **Signals + RxJS**
+- **Angular Material + Tailwind**
+- **Modularną strukturę folderów (core / feature / shared)**
+
+Zaprojektowany tak, aby był skalowalny, z czytelnym podziałem na warstwy:
+- API (źródło danych)
+- Store (zarządzanie stanem)
+- UI (komponenty prezentacyjne)
+
