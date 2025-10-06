@@ -5,16 +5,11 @@ import {UserModel} from '../../shared/models';
 
 @Injectable({ providedIn: 'root' })
 export class UsersApiService {
-  private readonly API = 'https://jsonplaceholder.typicode.com';
+  private readonly apiUrl = 'https://jsonplaceholder.typicode.com';
 
   constructor(private http: HttpClient) {}
 
   public getUsers(): Observable<UserModel[]> {
-    return this.http.get<UserModel[]>(`${this.API}/users`);
-  }
-
-  /** Pobranie jednego użytkownika po ID */
-  public getUserById(id: number): Observable<UserModel> {
-    return this.http.get<UserModel>(`${this.API}/users/${id}`);
+    return this.http.get<UserModel[]>(`${this.apiUrl}/users`);
   }
 }

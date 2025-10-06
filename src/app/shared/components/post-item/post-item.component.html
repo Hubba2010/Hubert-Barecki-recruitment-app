@@ -60,11 +60,17 @@
 
   @if (expanded()) {
     <div class="mt-4 border-t border-gray-200 pt-4 space-y-3">
-      @for (comment of comments(); track $index) {
-        <p class="text-blue-800 text-sm font-bold">
-          {{ comment.name }} <span class="text-gray-400 text-xs">({{ comment.email }})</span>
-        </p>
-        <p class="text-gray-600 text-sm">{{ comment.body }}</p>
+      @if (commentsLoading()) {
+        <div class="flex justify-center py-4">
+          <mat-spinner diameter="30"></mat-spinner>
+        </div>
+      } @else {
+        @for (comment of comments(); track $index) {
+          <p class="text-blue-800 text-sm font-bold">
+            {{ comment.name }} <span class="text-gray-400 text-xs">({{ comment.email }})</span>
+          </p>
+          <p class="text-gray-600 text-sm">{{ comment.body }}</p>
+        }
       }
     </div>
   }

@@ -5,11 +5,12 @@ import {PostsApiService} from '../../../core/api';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {PostsStore} from '../../../core/data-access';
 import {MatTooltip} from '@angular/material/tooltip';
+import {MatProgressSpinner} from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-post',
   standalone: true,
-  imports: [CommonModule, MatTooltip],
+  imports: [CommonModule, MatTooltip, MatProgressSpinner],
   templateUrl: './post-item.component.html',
 })
 export class PostItemComponent {
@@ -24,6 +25,8 @@ export class PostItemComponent {
   readonly comments = signal<PostCommentModel[] | null>(null);
   readonly postId = computed(() => this.post().id.toString());
   readonly isFavorite = computed(() => this._postsStore.isFavorite(this.postId()));
+  readonly commentsLoading = computed(() => this._postsStore.commentsLoading());
+
 
   public toggleExpand(e: MouseEvent) {
     e.stopPropagation();
@@ -35,7 +38,7 @@ export class PostItemComponent {
   }
 
   public loadComments(): void {
-    this._postsApiService.getCommentsByPostId(this.postId()).pipe(
+    this._postsStore.getCommentsByPostId(this.postId()).pipe(
       takeUntilDestroyed(this._destroyRef)
     ).subscribe((postComments) => {
       this.comments.set(postComments)

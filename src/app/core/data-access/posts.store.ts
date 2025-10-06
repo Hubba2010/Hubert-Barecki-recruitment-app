@@ -1,7 +1,8 @@
 import {computed, inject, Injectable, signal} from '@angular/core';
-import {PostModel} from '../../shared/models';
+import {PostCommentModel, PostModel} from '../../shared/models';
 import {PostsApiService} from '../api';
 import {tap} from 'rxjs/operators';
+import {Observable} from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class PostsStore{
@@ -11,12 +12,16 @@ export class PostsStore{
   private _favorites = signal<Set<string | number>>(new Set());
 
   readonly postsList = computed(() => this._postsData());
+  readonly postsLoading = signal(false);
+  readonly commentsLoading = signal(false);
 
   public fetchPosts(userId?: string | number): void {
+    this.postsLoading.set(true);
     this._postsApiService.getPosts(userId)
       .pipe(
         tap(data => {
           this._postsData.set(data || []);
+          this.postsLoading.set(false);
         })
       )
       .subscribe();
@@ -33,7 +38,12 @@ export class PostsStore{
     return this._favorites().has(postId);
   }
 
-  public favoritePosts(): PostModel[] {
-    return this._postsData().filter(p => this._favorites().has(p.id));
+  public getCommentsByPostId(postId: string | number): Observable<PostCommentModel[]> {
+    this.commentsLoading.set(true)
+    return this._postsApiService.getCommentsByPostId(postId).pipe(
+      tap(data => {
+        this.commentsLoading.set(false);
+      })
+    );
   }
 }

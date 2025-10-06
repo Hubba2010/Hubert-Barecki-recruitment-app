@@ -5,7 +5,7 @@ import {PostCommentModel, PostModel} from '../../shared/models';
 
 @Injectable({ providedIn: 'root' })
 export class PostsApiService {
-  private readonly API = 'https://jsonplaceholder.typicode.com';
+  private readonly apiUrl = 'https://jsonplaceholder.typicode.com';
 
   constructor(private http: HttpClient) {}
 
@@ -14,10 +14,10 @@ export class PostsApiService {
     if (userId) {
       params = params.set('userId', userId.toString());
     }
-    return this.http.get<PostModel[]>(`${this.API}/posts`, { params });
+    return this.http.get<PostModel[]>(`${this.apiUrl}/posts`, { params });
   }
 
   public getCommentsByPostId(postId: string | number): Observable<PostCommentModel[]> {
-    return this.http.get<PostCommentModel[]>(`${this.API}/posts/${postId}/comments`);
+    return this.http.get<PostCommentModel[]>(`${this.apiUrl}/posts/${postId}/comments`);
   }
 }

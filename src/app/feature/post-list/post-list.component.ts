@@ -1,14 +1,14 @@
-import {afterRenderEffect, Component, computed, inject, signal} from '@angular/core';
-import {FormBuilder, FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {afterRenderEffect, Component, computed, inject} from '@angular/core';
+import {FormBuilder, ReactiveFormsModule} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import {PostModel, UserModel} from '../../shared/models';
 import { PostItemComponent } from '../../shared/components/post-item';
 import {PostsStore, UsersStore} from '../../core/data-access';
 import {toSignal} from '@angular/core/rxjs-interop';
+import {MatProgressSpinner} from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-post-list',
@@ -21,7 +21,8 @@ import {toSignal} from '@angular/core/rxjs-interop';
     MatSelectModule,
     MatCheckboxModule,
     PostItemComponent,
-    PostItemComponent
+    PostItemComponent,
+    MatProgressSpinner
   ],
   templateUrl: './post-list.component.html',
 })
@@ -39,6 +40,7 @@ export class PostListComponent {
   readonly filtersFormValue = toSignal(this.filtersForm.valueChanges, { initialValue: {}});
 
   readonly users = computed(() => this._usersStore.usersList());
+  readonly postsLoading = computed(() => this._postsStore.postsLoading());
 
   readonly filteredPosts = computed(() => {
     let list = this._postsStore.postsList();
