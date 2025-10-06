@@ -47,4 +47,8 @@ export class GanttComponent {
       return { ...post, leftPercent, widthPercent };
     });
   });
+
+  constructor() {
+    this._postsStore.fetchPosts();
+  }
 }

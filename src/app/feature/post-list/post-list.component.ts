@@ -1,4 +1,4 @@
-import {afterRenderEffect, Component, computed, inject} from '@angular/core';
+import {afterRenderEffect, Component, computed, inject, OnInit} from '@angular/core';
 import {FormBuilder, ReactiveFormsModule} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -26,7 +26,7 @@ import {MatProgressSpinner} from '@angular/material/progress-spinner';
   ],
   templateUrl: './post-list.component.html',
 })
-export class PostListComponent {
+export class PostListComponent implements OnInit {
   private readonly _fb = inject(FormBuilder);
   private _postsStore = inject(PostsStore);
   private _usersStore = inject(UsersStore);
@@ -70,6 +70,10 @@ export class PostListComponent {
         this._postsStore.fetchPosts(userId || undefined);
       });
     })
+  }
+
+  public ngOnInit(): void {
+    this._postsStore.fetchPosts();
   }
 }
 

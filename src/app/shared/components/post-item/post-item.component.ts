@@ -1,7 +1,6 @@
 import {Component, computed, DestroyRef, inject, input, output, signal} from '@angular/core';
 import {PostCommentModel, PostModel} from '../../models';
 import {CommonModule} from '@angular/common';
-import {PostsApiService} from '../../../core/api';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {PostsStore} from '../../../core/data-access';
 import {MatTooltip} from '@angular/material/tooltip';
@@ -14,7 +13,6 @@ import {MatProgressSpinner} from '@angular/material/progress-spinner';
   templateUrl: './post-item.component.html',
 })
 export class PostItemComponent {
-  private readonly _postsApiService = inject(PostsApiService);
   private readonly _postsStore = inject(PostsStore);
   private readonly _destroyRef = inject(DestroyRef);
 

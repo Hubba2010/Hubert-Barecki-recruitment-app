@@ -11,12 +11,9 @@ import {PostsStore, UsersStore} from './core/data-access';
   templateUrl: './app.component.html'
 })
 export class AppComponent implements OnInit {
-  private _postsStore = inject(PostsStore);
   private _usersStore = inject(UsersStore);
-
 
   public ngOnInit(): void {
     this._usersStore.getAllUsers();
-    this._postsStore.fetchPosts();
   }
 }
